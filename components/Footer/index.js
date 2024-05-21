@@ -4,11 +4,11 @@ export default function Footer() {
   return (
     <footer className={styles.footer}>
       <a
-        href="https://github.com/ibnzUK/next-chrome-starter"
+        href="https://github.com/Terminator1601"
         target="_blank"
         rel="noopener noreferrer"
       >
-        Footer V.0.0.1
+        @Terminator1601 V.0.0.1
         <span className={styles.logo}>
           <img
             src="icons/icon16.png"

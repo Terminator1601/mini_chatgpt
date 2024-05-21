@@ -102,6 +102,25 @@ export default function New({ navigateToPage }) {
                   required
                 />
               </div>
+              <div>
+                <label
+                  htmlFor="apiKey"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Chat-Gpt Api Key
+                </label>
+                <br />
+
+                <input
+                  type="password"
+                  id="signupConfirmPassword"
+                  className=""
+                  required
+                />
+                <a href="https://openai.com/index/openai-api/" target="_blank">
+                  ?
+                </a>
+              </div>
               <button type="submit" className="">
                 Signup
               </button>
