@@ -185,12 +185,14 @@
 
 
 
+
+
 import { useState } from "react";
 import { app, db } from "../../database/firebaseConfig";
 import styles from "../../styles/Pages.module.css";
 import "tailwindcss/tailwind.css";
 import { getAnalytics } from "firebase/analytics";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 
 // Initialize analytics only if in browser environment
 if (typeof window !== "undefined") {
@@ -204,9 +206,11 @@ export default function New({ navigateToPage }) {
     password: "",
     apiKey: "",
   });
+  const [message, setMessage] = useState("");
 
   const toggleForm = () => {
     setIsLogin(!isLogin);
+    setMessage(""); // Clear message when toggling form
   };
 
   const handleChange = (e) => {
@@ -219,6 +223,16 @@ export default function New({ navigateToPage }) {
 
   const handleSignup = async (e) => {
     e.preventDefault();
+
+    // Check if email already exists
+    const emailExistsQuery = query(collection(db, "userDetail"), where("email", "==", formData.email));
+    const emailExistsSnapshot = await getDocs(emailExistsQuery);
+
+    if (!emailExistsSnapshot.empty) {
+      setMessage("Email already exists. Please choose a different one.");
+      return; // Stop execution if email already exists
+    }
+
     try {
       const docRef = await addDoc(collection(db, "userDetail"), {
         email: formData.email,
@@ -226,16 +240,36 @@ export default function New({ navigateToPage }) {
         apiKey: formData.apiKey,
       });
       console.log("Document written with ID: ", docRef.id);
+      setMessage("Signup successful!");
     } catch (e) {
       console.error("Error adding document: ", e);
+      setMessage("Signup failed. Please try again.");
     }
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Implement login logic
-    console.log("Login with: ", formData);
+    
+    try {
+      // Query the database to find a document with matching email and password
+      const loginQuery = query(collection(db, "userDetail"), 
+        where("email", "==", formData.email),
+        where("password", "==", formData.password)
+      );
+      const loginSnapshot = await getDocs(loginQuery);
+  
+      // If a matching document is found, consider login successful
+      if (!loginSnapshot.empty) {
+        setMessage("Login successful!");
+      } else {
+        setMessage("Invalid email or password. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error logging in: ", error);
+      setMessage("Login failed. Please try again.");
+    }
   };
+  
 
   return (
     <div
@@ -249,7 +283,7 @@ export default function New({ navigateToPage }) {
         <h1 className={styles.title}>MiniGpt 1.0</h1>
 
         {isLogin ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 w-full">
+          <div >
             <form
               onSubmit={handleLogin}
               className="space-y-4 w-full max-w-xs sm:max-w-none sm:w-auto"
@@ -338,7 +372,7 @@ export default function New({ navigateToPage }) {
                 </label>
                 <br />
                 <input
-                  type="apiKey"
+                  type="text"
                   id="apiKey"
                   className="placeholder:italic text-sm font-medium placeholder:text-slate-400 text-black"
                   required
@@ -352,6 +386,12 @@ export default function New({ navigateToPage }) {
                 Signup
               </button>
             </form>
+          </div>
+        )}
+
+        {message && (
+          <div className="mt-4 text-lg text-green-500">
+            {message}
           </div>
         )}
 
