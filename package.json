@@ -1,28 +1,32 @@
 {
-  "name": "mini-gpt",
-  "version": "0.0.1",
-  "description": "Next.js Chrome Extension integrated with ChatGpt to make things easy",
-  "main": "index.js",
-  "scripts": {
-    "build": "npm run prep",
-    "prep": "npm run exp && node out.js",
-    "exp": "next build && next export",
-    "run": "next start",
-    "dev": "next dev"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "name": "react-chrome-ext",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "firebase": "^10.12.1",
-    "glob": "^10.2.3",
-    "next": "^14.2.3",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.11",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.7.3",
+    "html-webpack-plugin": "^5.5.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "typescript": "^4.9.4",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "watch": "webpack -w --config webpack.config.js"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3"
+    "tailwindcss": "^3.4.3",
+    "ts-loader": "^9.4.2",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   }
 }

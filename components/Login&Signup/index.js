@@ -247,28 +247,31 @@ export default function New({ navigateToPage }) {
     }
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    
-    try {
-      // Query the database to find a document with matching email and password
-      const loginQuery = query(collection(db, "userDetail"), 
-        where("email", "==", formData.email),
-        where("password", "==", formData.password)
-      );
-      const loginSnapshot = await getDocs(loginQuery);
+
+const handleLogin = async (e) => {
+  e.preventDefault();
   
-      // If a matching document is found, consider login successful
-      if (!loginSnapshot.empty) {
-        setMessage("Login successful!");
-      } else {
-        setMessage("Invalid email or password. Please try again.");
-      }
-    } catch (error) {
-      console.error("Error logging in: ", error);
-      setMessage("Login failed. Please try again.");
+  try {
+    // Query the database to find a document with matching email and password
+    const loginQuery = query(collection(db, "userDetail"), 
+      where("email", "==", formData.email),
+      where("password", "==", formData.password)
+    );
+    const loginSnapshot = await getDocs(loginQuery);
+
+    // If a matching document is found, consider login successful
+    if (!loginSnapshot.empty) {
+      setMessage("Login successful!");
+      navigateToPage("mainPage"); // Navigate to the new page
+    } else {
+      setMessage("Invalid email or password. Please try again.");
     }
-  };
+  } catch (error) {
+    console.error("Error logging in: ", error);
+    setMessage("Login failed. Please try again.");
+  }
+};
+
   
 
   return (
